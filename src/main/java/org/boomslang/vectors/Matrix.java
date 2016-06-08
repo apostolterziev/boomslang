@@ -132,6 +132,17 @@ public class Matrix {
         return result / m;
     }
 
+    public double norm() {
+        if (n != 1) {
+            throw new IllegalArgumentException("Need a vector to compute norm!");
+        }
+        double result = 0;
+        for (int i = 0; i < m; i++) {
+            result += elements[0][i]*elements[0][i];
+        }
+        return Math.sqrt(result);
+    }
+
     public Matrix sign() {
         double[][] result = new double[n][m];
         for (int i = 0; i < n; i++) {

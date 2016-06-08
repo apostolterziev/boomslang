@@ -45,8 +45,8 @@ public class SMO {
                 Matrix xj = problem.getX().getRow(j);
                 double yi = problem.getY().get(0, i);
                 double yj = problem.getY().get(0, j);
-                double kij = kernel.k(xi, xi) + kernel.k(xj, xj) - 2 * kernel.k(xi, xj);
-                if (kij == 0) {
+                double eta = kernel.k(xi, xi) + kernel.k(xj, xj) - 2 * kernel.k(xi, xj);
+                if (eta == 0) {
                     continue;
                 }
                 double alphaj = alpha.get(0, j);
@@ -57,7 +57,7 @@ public class SMO {
                 double ei = getPredictionError(xi, yi, w, b);
                 double ej = getPredictionError(xj, yj, w, b);
 
-                alpha.set(0, j, alphaj + yj * (ei - ej) / kij);
+                alpha.set(0, j, alphaj + yj * (ei - ej) / eta);
                 alpha.set(0, j, Math.max(alpha.get(0, j), bounds.L));
                 alpha.set(0, j, Math.min(alpha.get(0, j), bounds.H));
                 alpha.set(0, i, alphai + yi * yj * (alphaj - alpha.get(0, j)));
@@ -65,6 +65,7 @@ public class SMO {
             Matrix diff = alpha.substractElements(oldAlpha);
             error = diff.dotProduct(diff);
             System.out.println("error\t" + error);
+            System.out.println(w);
         }
         Matrix supportVectors = getSupportVectors(alpha, problem.getX());
         return supportVectors;
